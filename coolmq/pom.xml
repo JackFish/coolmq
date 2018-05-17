@@ -2,57 +2,56 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
-    
-    	<groupId>com.furioustidy</groupId>
+
+    <groupId>com.furioustidy</groupId>
     <artifactId>coolmq</artifactId>
     <version>1.0-SNAPSHOT</version>
-	
-	 <properties>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <java.version>1.8</java.version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
     </properties>
-	
-    <dependencies>       
-    		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-		<dependency>
-		    <groupId>com.fasterxml.jackson.core</groupId>
-		    <artifactId>jackson-databind</artifactId>
-		    <version>2.8.9</version>
-		</dependency>
-		    		
+    <dependencies>
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
-             <groupId>org.springframework.amqp</groupId>
-	        	<artifactId>spring-rabbit</artifactId>
-	        <version>1.5.6.RELEASE</version>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+		    <version>2.8.9</version>
         </dependency>
-	
-		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-autoconfigure</artifactId>
-		    <version>1.5.8.RELEASE</version>
-		</dependency>
-		
+
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>1.7.7.RELEASE</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-autoconfigure -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>1.5.13.RELEASE</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
-            <version>2.0.2.RELEASE</version>
+            <version>2.0.7.RELEASE</version>
         </dependency>
-        
-        
+
+
         <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjrt -->
-		<dependency>
-		    <groupId>org.aspectj</groupId>
-		    <artifactId>aspectjrt</artifactId>
-		    <version>1.8.13</version>
-		</dependency>
-		        
-             
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+
+
     </dependencies>
-    
-    <build>
+
+    <!--<build>
         <plugins>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -72,6 +71,6 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
-   
+    </build>-->
+
 </project>
