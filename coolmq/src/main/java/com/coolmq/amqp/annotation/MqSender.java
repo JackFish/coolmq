@@ -15,5 +15,6 @@ import java.lang.annotation.RetentionPolicy;
 @Documented  
 public @interface MqSender {  
 	String exchange() default "";   //要发送的交换机
-	String routingkey() default "";    //要发送的key
+	String routingKey() default "";    //要发送的key
+	String payload() default "send success";    //要发送的内容
 }  
