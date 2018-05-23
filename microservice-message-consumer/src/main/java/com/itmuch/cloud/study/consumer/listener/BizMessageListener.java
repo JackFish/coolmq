@@ -17,5 +17,6 @@ public class BizMessageListener extends AbstractMessageListener  {
 	public void receiveMessage(Message message, MessageConverter messageConverter) {
 		Object bizObj = messageConverter.fromMessage(message);
 		logger.info("get message success:"+bizObj.toString());
+		//throw new NullPointerException();
 	}
 }

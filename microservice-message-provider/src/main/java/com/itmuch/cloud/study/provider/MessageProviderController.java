@@ -61,7 +61,7 @@ public class MessageProviderController {
     @MqSender(exchange = MQConstants.BUSINESS_EXCHANGE, routingKey = MQConstants.BUSINESS_KEY, payload = "Hello!")
     public String testMQWithAnnotation() throws Exception {
         //do some biz
-        return "sucess";
+        return "success";
     }
 
 }
