@@ -10,7 +10,7 @@ spring.rabbitmq.listener.concurrency: 5
 spring.rabbitmq.listener.max-concurrency: 20
 spring.rabbitmq.listener.retry.enabled: true
 spring.rabbitmq.virtual.host: coolhost
-spring.rabbitmq.cache.channel.size: 3
+spring.rabbitmq.cache.channel.size: 100
 spring.rabbitmq.listener.acknowledge-mode: manual
 spring.rabbitmq.listener.publish-returns: true;
 
