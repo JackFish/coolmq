@@ -56,6 +56,7 @@ public class MessageProviderController {
         rabbitMetaMessage.setPayload("the message you want to send");
 
         //do some biz
+
         insetUser();
 
         /** 发送消息 */
