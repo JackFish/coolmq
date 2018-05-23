@@ -12,6 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
+import java.util.UUID;
+
 
 @RestController
 public class MessageProviderController {
@@ -24,6 +28,9 @@ public class MessageProviderController {
 
     @Autowired
     RabbitSender rabbitSender;
+
+    @Autowired
+    EntityManager entityManager;
 
 //  @Autowired
 //  private RabbitSender rabbitSender;
@@ -50,6 +57,8 @@ public class MessageProviderController {
 
         //do some biz
 
+        insetUser();
+
         /** 发送消息 */
         rabbitSender.send(rabbitMetaMessage);
 
@@ -61,7 +70,14 @@ public class MessageProviderController {
     @MqSender(exchange = MQConstants.BUSINESS_EXCHANGE, routingKey = MQConstants.BUSINESS_KEY, payload = "Hello!")
     public String testMQWithAnnotation() throws Exception {
         //do some biz
+        insetUser();
         return "success";
     }
 
+    private void insetUser(){
+        String id = UUID.randomUUID().toString().replace("-","");
+        Query query = entityManager.createNativeQuery("insert into user values(?,'zhangsan',18)");
+        query.setParameter(1,id);
+        query.executeUpdate();
+    }
 }
