@@ -1,12 +1,12 @@
 server:
-  port: 9021
+  port: 0
 spring:
   application:
     name: microservice-message-consumer
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
   instance:
     preferIpAddress: true
     

@@ -1,0 +1,53 @@
+version: '3'
+services:
+  rabbit1:
+    image: rabbitmq:management-alpine
+    hostname: rabbit1
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=jack
+      - RABBITMQ_DEFAULT_PASS=test123
+    
+
+  rabbit2:
+    image: rabbitmq:alpine
+    hostname: rabbit2
+    links:
+      - rabbit1
+    environment:
+     - CLUSTERED=true
+     - CLUSTER_WITH=rabbit1
+     - RAM_NODE=true
+    
+
+  rabbit3:
+    image: rabbitmq:alpine
+    hostname: rabbit3
+    links:
+      - rabbit1
+      - rabbit2
+    environment:
+     - CLUSTERED=true
+     - CLUSTER_WITH=rabbit1
+    
+
+  redis:
+    image: "redis:alpine"
+    ports:
+        - "6379:6379"
+    
+
+  mysql:
+    image: mysql:5
+    volumes:
+      - ~/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    
+

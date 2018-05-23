@@ -1,6 +1,7 @@
 spring:
   cloud:
     config:
+      uri: ${SPRING_CLOUD_CONFIG_URI:http://localhost:8040}
       discovery:
         enabled: true
         service-id: microservice-config-server

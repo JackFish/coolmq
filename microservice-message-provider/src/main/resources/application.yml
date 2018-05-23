@@ -5,7 +5,7 @@ spring:
     name: microservice-message-provdier
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+    url: jdbc:mysql://localhost:3306/provider?characterEncoding=utf-8
     username: root
     password: 123456
     hikari:
@@ -14,7 +14,7 @@ spring:
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
-    name: dataSource-dev
+    name: dataSource-provider
   jpa:
     hibernate:
       ddl-auto: update
@@ -22,7 +22,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://discovery:8761/eureka/
+      defaultZone: http://localhost:8761/eureka/
   instance:
     preferIpAddress: true
 ribbon:
