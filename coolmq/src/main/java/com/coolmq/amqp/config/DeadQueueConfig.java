@@ -1,14 +1,10 @@
 package com.coolmq.amqp.config;
 
+import com.coolmq.amqp.util.MQConstants;
+import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AcknowledgeMode;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.core.MessageProperties;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -19,15 +15,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import com.coolmq.amqp.util.MQConstants;
-import com.rabbitmq.client.Channel;
-
 
 /**
  * <p><b>Description:</b> RabbitMQ交换机、队列的配置类.定义交换机、key、queue并做好绑定。
  * 同时定义每个队列的ttl，队列最大长度，Qos等等
  * 这里只绑定了死信队列。建议每个队列定义自己的QueueConfig
- * <p><b>Company:</b> 
+ * <p><b>Company:</b>
  *
  * @author created by fw at 21:54 on 2017-12-23
  * @version V0.1
@@ -35,52 +28,53 @@ import com.rabbitmq.client.Channel;
 @Configuration
 @ComponentScan
 public class DeadQueueConfig {
-	
-	@Component
-	public class DeadLetterMessageListener implements ChannelAwareMessageListener {
-		private Logger logger = LoggerFactory.getLogger(DeadLetterMessageListener.class);
 
-		@Autowired
-		private RedisTemplate<String, Object> redisTemplate;
+    @Component
+    public class DeadLetterMessageListener implements ChannelAwareMessageListener {
+        private Logger logger = LoggerFactory.getLogger(DeadLetterMessageListener.class);
+
+        @Autowired
+        private RedisTemplate<String, Object> redisTemplate;
 
 		/*@Autowired
 		private DeadLetterMessageMapper deadLetterMessageMapper;
 
 		@Autowired
 		private MailServiceImpl mailService;*/
-		
-		// 收件人
+
+        // 收件人
 		/*@Value("${recipient.email.address}")
 		private String emailRecipient;*/
 
-		/**
-		 * Callback for processing a received Rabbit message.
-		 * <p>Implementors are supposed to process the given Message,
-		 * typically sending reply messages through the given Session.
-		 * @param message the received AMQP message (never <code>null</code>)
-		 * @param channel the underlying Rabbit Channel (never <code>null</code>)
-		 * @throws Exception Any.
-		 */
-		@Override
-		public void onMessage(Message message, Channel channel) throws Exception {
-			MessageProperties messageProperties = message.getMessageProperties();
-	        // 消息体
-			String messageBody = new String(message.getBody());
+        /**
+         * Callback for processing a received Rabbit message.
+         * <p>Implementors are supposed to process the given Message,
+         * typically sending reply messages through the given Session.
+         *
+         * @param message the received AMQP message (never <code>null</code>)
+         * @param channel the underlying Rabbit Channel (never <code>null</code>)
+         * @throws Exception Any.
+         */
+        @Override
+        public void onMessage(Message message, Channel channel) throws Exception {
+            MessageProperties messageProperties = message.getMessageProperties();
+            // 消息体
+            String messageBody = new String(message.getBody());
 
-			logger.warn("dead letter message：{} | tag：{}", messageBody, message.getMessageProperties().getDeliveryTag());
+            logger.warn("dead letter message：{} | tag：{}", messageBody, message.getMessageProperties().getDeliveryTag());
 			/*// 入库
 			insertRecord(logKey, message);
 			// 发邮件
 			sendEmail(logKey, messageProperties.getMessageId(), messageBody);*/
 
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 
-			redisTemplate.opsForHash().delete(MQConstants.MQ_CONSUMER_RETRY_COUNT_KEY, messageProperties.getMessageId());
-		}
+            redisTemplate.opsForHash().delete(MQConstants.MQ_CONSUMER_RETRY_COUNT_KEY, messageProperties.getMessageId());
+        }
 
-		/**
-		 * 入库
-		 *//*
+        /**
+         * 入库
+         *//*
 		private void insertRecord(String logKey, Message message) {
 			try {
 				MessageProperties msgProp = message.getMessageProperties();
@@ -99,8 +93,8 @@ public class DeadQueueConfig {
 		}
 
 		*//**
-		 * 发邮件
-		 *//*
+         * 发邮件
+         *//*
 		private void sendEmail(String logKey, String msgId, String msgBody) {
 			try {
 				String subject = "MQ处理异常";
@@ -114,27 +108,29 @@ public class DeadQueueConfig {
 				logger.error("{}|发送邮件----异常----", logKey, e.getMessage());
 			}
 		}*/
-	}
+    }
 
     //========================== 声明交换机 ==========================
+
     /**
      * 死信交换机
      */
     @Bean
-    public DirectExchange dlxExchange() {
+    private DirectExchange dlxExchange() {
         return new DirectExchange(MQConstants.DLX_EXCHANGE);
     }
 
- 
 
     //========================== 声明队列 ===========================
+
     /**
      * 死信队列
      */
     @Bean
     public Queue dlxQueue() {
-        return new Queue(MQConstants.DLX_QUEUE,true,false,false);
+        return new Queue(MQConstants.DLX_QUEUE, true, false, false);
     }
+
     /**
      * 通过死信路由key绑定死信交换机和死信队列
      */
@@ -143,17 +139,18 @@ public class DeadQueueConfig {
         return BindingBuilder.bind(dlxQueue()).to(dlxExchange())
                 .with(MQConstants.DLX_ROUTING_KEY);
     }
-    
+
     /**
      * 死信队列的监听
-     * @param connectionFactory RabbitMQ连接工厂
-     * @param DeadLetterMessageListener 死信的监听者
+     *
+     * @param connectionFactory         RabbitMQ连接工厂
+     * @param deadLetterMessageListener 死信的监听者
      * @return 监听容器对象
      */
     @Bean
-    public SimpleMessageListenerContainer deadLetterListenerContainer(ConnectionFactory connectionFactory, 
-    		DeadLetterMessageListener deadLetterMessageListener) {
-    	
+    public SimpleMessageListenerContainer deadLetterListenerContainer(ConnectionFactory connectionFactory,
+                                                                      DeadLetterMessageListener deadLetterMessageListener) {
+
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer(connectionFactory);
         container.setQueues(dlxQueue());
         container.setExposeListenerChannel(true);
@@ -165,5 +162,5 @@ public class DeadQueueConfig {
     }
 
     //====================== 一个例子，用来说明如何声明队列与交换机绑定 =======================
-      
+
 }

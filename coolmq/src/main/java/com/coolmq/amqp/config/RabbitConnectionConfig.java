@@ -1,15 +1,12 @@
 package com.coolmq.amqp.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.RabbitConnectionFactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.amqp.RabbitProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
@@ -19,7 +16,7 @@ import java.util.List;
 
 /**
  * <p><b>Description:</b> Rabbit MQ连接工厂配置
- * <p><b>Company:</b> 
+ * <p><b>Company:</b>
  *
  * @author created by hongda at 11:33 on 2017-07-05
  * @version V0.1
@@ -103,7 +100,7 @@ public class RabbitConnectionConfig {
      * @param addresses Rabbit MQ服务器列表，比如：ip1:port1,ip2:port2
      * @return 搅乱后的rabbit mq 服务器地址列表
      */
-     String shuffle(String addresses) {
+    private String shuffle(String addresses) {
         String[] addrArr = StringUtils.commaDelimitedListToStringArray(addresses);
         List<String> addrList = Arrays.asList(addrArr);
         Collections.shuffle(addrList);
@@ -122,6 +119,6 @@ public class RabbitConnectionConfig {
         return stringBuilder.toString();
     }
 
-   
+
 }
 
