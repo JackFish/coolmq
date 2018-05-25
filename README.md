@@ -15,7 +15,15 @@ microservice-message-consumer为消息接收者
 4. consumer中声明消息接受者: BizMessageListener.java  
 5. provider中发送消息: RabbitSender.send()即可  
 
-Spring cloud配置、启动请参考：https://github.com/eacdy/spring-cloud-study
+Spring cloud配置、启动请参考：https://github.com/JackFish/coolmq
+
+## 测试部署说明  
+1. 在项目目录中打开终端输入 docker-compose up -d #启动rabibitmq集群 redis 和mysql 数据库
+2. 登陆本地数据库 运行sql, coolmq\microservice-message-provider\src\main\resources\ddl.sql
+3. 依次启动microservice-discovery-eureka, microservice-config-server-eureka, microservice-message-provider, microservice-message-consumer
+4. localhost:15672 jack/test123 登陆后 查看 目前exchange和queue情况
+5. 验证发送：localhost:9020/testmq; localhost:9020/testMQWithAnnotation  
+
 
 
 # coolmq 用rabbitmq解决分布式事务
